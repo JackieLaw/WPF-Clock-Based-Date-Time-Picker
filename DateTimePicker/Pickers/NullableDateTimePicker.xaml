@@ -1,0 +1,110 @@
+﻿<UserControl x:Class="PeteEvans.Pickers.NullableDateTimePicker"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:autoCompleteComboBox="clr-namespace:PeteEvans.AutoCompleteComboBox"
+             xmlns:pickerComponents="clr-namespace:PeteEvans.PickerComponents"
+             xmlns:pickers="clr-namespace:PeteEvans.Pickers"
+             mc:Ignorable="d"
+             d:DesignHeight="20" d:DesignWidth="300"
+             Name="DateTimeControl">
+    <Grid Height="20"
+          DataContext="{Binding ElementName=DateTimeControl}"
+          d:DataContext="{d:DesignInstance pickers:DateTimePicker}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Border Grid.Column="0" BorderBrush="Black" Opacity="0.9" BorderThickness="1">
+            <TextBlock Name="TextBlock" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="2" />
+        </Border>
+        <Button Name="OpenButton" Grid.Column="1"
+                VerticalAlignment="Stretch"
+                Click="OpenButton_Click">
+            <Button.Content>
+                <Grid>
+                    <Path
+                        Height="4" Width="8"
+                        Stretch="Uniform"
+                        Data="F1 M 301.14,-189.041L 311.57,-189.041L 306.355,-182.942L 301.14,-189.041 Z "
+                        Margin="1">
+                        <Path.Fill>
+                            <SolidColorBrush Color="Black" />
+                        </Path.Fill>
+                    </Path>
+                </Grid>
+            </Button.Content>
+        </Button>
+        <Popup Name="PickerPopup" StaysOpen="False" Placement="Right" Focusable="True"
+               FocusManager.IsFocusScope="False"
+               PopupAnimation="Fade" AllowsTransparency="True"
+               Closed="PickerPopup_Closed">
+            <Popup.Resources>
+                <Style x:Key="GridEnableDisableStyle" TargetType="Grid">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsValid}" Value="False">
+                            <Setter Property="Opacity" Value="0.5" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Popup.Resources>
+            <Grid>
+                <Border Background="Black" Opacity="0.3" />
+                <Grid Style="{StaticResource GridEnableDisableStyle}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <pickerComponents:GraphicalTimePicker x:Name="TimePicker"
+                                                              Grid.Row="0" Grid.Column="0"
+                                                              HorizontalAlignment="Center"
+                                                              DisplayTime="{Binding InterimValue, Mode=TwoWay}" />
+
+                        <pickerComponents:RadialDatePicker x:Name="DatePicker"
+                                                           DisplayTime="{Binding InterimValue, Mode=TwoWay}"
+                                                           Grid.Row="0" Grid.Column="1" />
+
+                        <pickerComponents:AutoCompleteTimePicker x:Name="TextualTimePicker"
+                                                                 Grid.Row="1" Grid.Column="0"
+                                                                 HorizontalAlignment="Center"
+                                                                 VerticalAlignment="Center"
+                                                                 Width="50"
+                                                                 SelectedValue="{Binding InterimValue, Mode=TwoWay}"
+                                                                 Format="0:HH:mm" />
+
+                        <pickerComponents:AutoCompleteDatePicker
+                            Grid.Row="1" Grid.Column="1"
+                            Width="100"
+                            SelectedValue="{Binding InterimValue, Mode=TwoWay}"
+                            Format=":d"
+                            HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+
+                    </Grid>
+                    <Button Grid.Row="1" HorizontalAlignment="Left"
+                            Content="Clear" Width="70" Margin="5"
+                            IsEnabled="{Binding IsValid}"
+                            Click="ClearButton_Click" />
+
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
+                        <Button IsDefault="True" Content="OK" Width="70" Margin="5"
+                                Click="OkButton_Click" />
+                        <Button IsCancel="True" Content="Cancel" Width="70" Margin="5"
+                                Click="CancelButton_Click" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </Popup>
+    </Grid>
+</UserControl>

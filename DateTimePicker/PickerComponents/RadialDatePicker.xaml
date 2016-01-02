@@ -1,0 +1,186 @@
+﻿<UserControl x:Class="PeteEvans.PickerComponents.RadialDatePicker"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:s="clr-namespace:System;assembly=mscorlib"
+             xmlns:radialPanel="clr-namespace:PeteEvans.RadialPanel"
+             xmlns:pickers="clr-namespace:PeteEvans.Pickers"
+             xmlns:pickerComponents="clr-namespace:PeteEvans.PickerComponents"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300"
+             x:Name="UserControl">
+    <Grid x:Name="LayoutRoot" DataContext="{Binding ElementName=UserControl}" Height="300" Width="300">
+        <Grid.Resources>
+            <Style x:Key="PickerStyle" TargetType="pickerComponents:DatePickerControl">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsValid}" Value="true">
+                        <Setter Property="Visibility" Value="Visible" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding IsValid}" Value="false">
+                        <Setter Property="Visibility" Value="Hidden" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            <DataTemplate DataType="{x:Type pickerComponents:StringObject}">
+                <TextBlock Text="{Binding Content}" Foreground="Black" Opacity="0.5" />
+            </DataTemplate>
+        </Grid.Resources>
+        <!-- Outer Rim -->
+        <Ellipse Stroke="Gray" Fill="White" StrokeThickness="1"
+                 HorizontalAlignment="Center" VerticalAlignment="Center"
+                 Width="{x:Static pickerComponents:DateTimePickerConstants.DatePickerOuterSize}"
+                 Height="{x:Static pickerComponents:DateTimePickerConstants.DatePickerOuterSize}" />
+        <!-- Inner Rim -->
+        <Ellipse Stroke="Gray" Fill="DarkGray" StrokeThickness="1"
+                 HorizontalAlignment="Center" VerticalAlignment="Center"
+                 Width="{x:Static pickerComponents:DateTimePickerConstants.DatePickerInnerSize}"
+                 Height="{x:Static pickerComponents:DateTimePickerConstants.DatePickerInnerSize}" />
+        <!-- Picker Canvas -->
+        <Canvas Width="{x:Static pickerComponents:DateTimePickerConstants.DatePickerInnerSize}"
+                Height="{x:Static pickerComponents:DateTimePickerConstants.DatePickerInnerSize}"
+                VerticalAlignment="Center" HorizontalAlignment="Center"
+                Background="Transparent">
+
+            <!-- Days this month -->
+            <ItemsControl Width="{x:Static pickerComponents:DateTimePickerConstants.DatePickerDaysThisMonthSize}"
+                          Height="{x:Static pickerComponents:DateTimePickerConstants.DatePickerDaysThisMonthSize}"
+                          Canvas.Top="{x:Static pickerComponents:DateTimePickerConstants.DatePickerDaysThisMonthMargin}"
+                          Canvas.Left="{x:Static pickerComponents:DateTimePickerConstants.DatePickerDaysThisMonthMargin}"
+                          x:Name="DaysThisMonthItemsControl" IsTabStop="False">
+                <ItemsControl.Resources>
+                    <DataTemplate DataType="{x:Type pickerComponents:DatePickerControlSettings}">
+                        <pickerComponents:DatePickerControl Text="{Binding Text}"
+                                                            ControlSize="20" HighlightSize="19" SelectedSize="13"
+                                                            IsHighlighted="{Binding IsHighlighted}"
+                                                            IsSelected="{Binding IsSelected}"
+                                                            IsValid="{Binding IsValid}"
+                                                            RequiredDate="{Binding Date}"
+                                                            DisplayTime="{Binding ElementName=UserControl, Path=DisplayTime, Mode=TwoWay}"
+                                                            Style="{StaticResource PickerStyle}" />
+                    </DataTemplate>
+                </ItemsControl.Resources>
+                <ItemsControl.ItemsPanel>
+
+                    <ItemsPanelTemplate>
+                        <radialPanel:RadialPanel MaxControlRadius="8" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+
+            <!-- Days next month -->
+            <ItemsControl Width="{x:Static pickerComponents:DateTimePickerConstants.DatePickerDaysNextMonthSize}"
+                          Height="{x:Static pickerComponents:DateTimePickerConstants.DatePickerDaysNextMonthSize}"
+                          Canvas.Top="{x:Static pickerComponents:DateTimePickerConstants.DatePickerDaysNextMonthMargin}"
+                          Canvas.Left="{x:Static pickerComponents:DateTimePickerConstants.DatePickerDaysNextMonthMargin}"
+                          x:Name="DaysNextMonthItemsControl" IsTabStop="False">
+                <ItemsControl.Resources>
+                    <DataTemplate DataType="{x:Type pickerComponents:DatePickerControlSettings}">
+                        <pickerComponents:DatePickerControl
+                            ControlSize="9" HighlightSize="7" SelectedSize="4"
+                            IsHighlighted="{Binding IsHighlighted}"
+                            IsSelected="{Binding IsSelected}"
+                            IsValid="{Binding IsValid}"
+                            RequiredDate="{Binding Date}"
+                            DisplayTime="{Binding ElementName=UserControl, Path=DisplayTime, Mode=TwoWay}"
+                            Style="{StaticResource PickerStyle}" />
+                    </DataTemplate>
+                </ItemsControl.Resources>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <radialPanel:RadialPanel MaxControlRadius="6" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+
+            <!-- Months -->
+            <ItemsControl Width="{x:Static pickerComponents:DateTimePickerConstants.DatePickerMonthSize}"
+                          Height="{x:Static pickerComponents:DateTimePickerConstants.DatePickerMonthSize}"
+                          Canvas.Top="{x:Static pickerComponents:DateTimePickerConstants.DatePickerMonthMargin}"
+                          Canvas.Left="{x:Static pickerComponents:DateTimePickerConstants.DatePickerMonthMargin}"
+                          x:Name="MonthsThisYearItemsControl" IsTabStop="False">
+                <ItemsControl.Resources>
+                    <DataTemplate DataType="{x:Type pickerComponents:DatePickerControlSettings}">
+                        <pickerComponents:DatePickerControl Text="{Binding Text}"
+                                                            ControlSize="30" HighlightSize="29" SelectedSize="24"
+                                                            IsHighlighted="{Binding IsHighlighted}"
+                                                            IsSelected="{Binding IsSelected}"
+                                                            IsValid="{Binding IsValid}"
+                                                            RequiredDate="{Binding Date}"
+                                                            DisplayTime="{Binding ElementName=UserControl, Path=DisplayTime, Mode=TwoWay}"
+                                                            SetDay="false"
+                                                            Style="{StaticResource PickerStyle}" />
+                    </DataTemplate>
+                </ItemsControl.Resources>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <radialPanel:RadialPanel MaxControlRadius="25" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+
+            <!-- Months Next Year -->
+            <ItemsControl Width="{x:Static pickerComponents:DateTimePickerConstants.DatePickerMonthNextYearSize}"
+                          Height="{x:Static pickerComponents:DateTimePickerConstants.DatePickerMonthNextYearSize}"
+                          Canvas.Top="{x:Static pickerComponents:DateTimePickerConstants.DatePickerMonthNextYearMargin}"
+                          Canvas.Left="{x:Static pickerComponents:DateTimePickerConstants.DatePickerMonthNextYearMargin}"
+                          x:Name="MonthsNextYearItemsControl" IsTabStop="False">
+                <ItemsControl.Resources>
+                    <DataTemplate DataType="{x:Type pickerComponents:DatePickerControlSettings}">
+                        <pickerComponents:DatePickerControl Text=""
+                                                            ControlSize="9" HighlightSize="7" SelectedSize="4"
+                                                            IsHighlighted="{Binding IsHighlighted}"
+                                                            IsSelected="{Binding IsSelected}"
+                                                            IsValid="{Binding IsValid}"
+                                                            RequiredDate="{Binding Date}"
+                                                            DisplayTime="{Binding ElementName=UserControl, Path=DisplayTime, Mode=TwoWay}"
+                                                            SetDay="false"
+                                                            Style="{StaticResource PickerStyle}" />
+                    </DataTemplate>
+                </ItemsControl.Resources>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <radialPanel:RadialPanel MaxControlRadius="6" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+
+            <!-- Year -->
+            <radialPanel:RadialPanel Width="{x:Static pickerComponents:DateTimePickerConstants.DatePickerYearSize}"
+                                     Height="{x:Static pickerComponents:DateTimePickerConstants.DatePickerYearSize}"
+                                     Canvas.Top="{x:Static pickerComponents:DateTimePickerConstants.DatePickerYearMargin}"
+                                     Canvas.Left="{x:Static pickerComponents:DateTimePickerConstants.DatePickerYearMargin}">
+                <pickerComponents:DatePickerControl Text="{Binding Text}"
+                                                    ControlSize="30" HighlightSize="29" SelectedSize="20"
+                                                    IsHighlighted="{Binding IsHighlighted}"
+                                                    IsSelected="{Binding IsSelected}"
+                                                    IsValid="{Binding IsValid}"
+                                                    RequiredDate="{Binding Date}"
+                                                    DisplayTime="{Binding ElementName=UserControl, Path=DisplayTime, Mode=TwoWay}"
+                                                    SetDay="false"
+                                                    Style="{StaticResource PickerStyle}"
+                                                    x:Name="ThisYearPicker" />
+                <pickerComponents:DatePickerControl DataContext="{Binding Year[1]}" Text="{Binding Text}"
+                                                    ControlSize="20" HighlightSize="19" SelectedSize="15"
+                                                    IsHighlighted="{Binding IsHighlighted}"
+                                                    IsSelected="{Binding IsSelected}"
+                                                    IsValid="{Binding IsValid}"
+                                                    RequiredDate="{Binding Date}"
+                                                    DisplayTime="{Binding ElementName=UserControl, Path=DisplayTime, Mode=TwoWay}"
+                                                    SetDay="false"
+                                                    Style="{StaticResource PickerStyle}"
+                                                    x:Name="NextYearPicker" />
+                <pickerComponents:DatePickerControl DataContext="{Binding Year[2]}" Text="{Binding Text}"
+                                                    ControlSize="20" HighlightSize="19" SelectedSize="15"
+                                                    IsHighlighted="{Binding IsHighlighted}"
+                                                    IsSelected="{Binding IsSelected}"
+                                                    IsValid="{Binding IsValid}"
+                                                    RequiredDate="{Binding Date}"
+                                                    DisplayTime="{Binding ElementName=UserControl, Path=DisplayTime, Mode=TwoWay}"
+                                                    SetDay="false"
+                                                    Style="{StaticResource PickerStyle}"
+                                                    x:Name="LastYearPicker" />
+            </radialPanel:RadialPanel>
+        </Canvas>
+    </Grid>
+</UserControl>

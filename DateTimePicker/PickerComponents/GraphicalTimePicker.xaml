@@ -1,0 +1,290 @@
+﻿<UserControl x:Class="PeteEvans.PickerComponents.GraphicalTimePicker"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:radialPanel="clr-namespace:PeteEvans.RadialPanel"
+             xmlns:pickerComponents="clr-namespace:PeteEvans.PickerComponents"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300"
+             x:Name="UserControl">
+
+    <Grid x:Name="LayoutRoot" DataContext="{Binding ElementName=UserControl}"
+          Height="300" Width="300">
+        <Grid.Resources>
+            <Style x:Key="ElipseAnimationStyle" TargetType="Ellipse">
+                <Setter Property="Opacity" Value="0.1" />
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Trigger.EnterActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0.9" Duration="0:0:0.2" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.EnterActions>
+                        <Trigger.ExitActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0.1" Duration="0:0:1" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.ExitActions>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </Grid.Resources>
+        <!-- Outer Rim -->
+        <Ellipse Stroke="Gray" Fill="White" StrokeThickness="1"
+                 HorizontalAlignment="Center" VerticalAlignment="Center"
+                 Width="{x:Static pickerComponents:DateTimePickerConstants.ClockFaceOuterSize}"
+                 Height="{x:Static pickerComponents:DateTimePickerConstants.ClockFaceOuterSize}" />
+        <!-- Inner Rim -->
+        <Ellipse Stroke="Gray" Fill="DarkGray" StrokeThickness="1"
+                 HorizontalAlignment="Center" VerticalAlignment="Center"
+                 Width="{x:Static pickerComponents:DateTimePickerConstants.ClockFaceInnerSize}"
+                 Height="{x:Static pickerComponents:DateTimePickerConstants.ClockFaceInnerSize}" />
+        <!-- Clock Face Canvas -->
+        <Canvas Width="{x:Static pickerComponents:DateTimePickerConstants.ClockFaceInnerSize}"
+                Height="{x:Static pickerComponents:DateTimePickerConstants.ClockFaceInnerSize}"
+                Background="Transparent">
+            <Canvas.Resources>
+                <Style TargetType="Button" BasedOn="{StaticResource GlassButton}">
+                    <Setter Property="Height" Value="25" />
+                    <Setter Property="Width" Value="25" />
+                    <Setter Property="VerticalAlignment" Value="Stretch" />
+                    <Setter Property="Background" Value="PaleTurquoise" />
+                </Style>
+            </Canvas.Resources>
+
+            <!-- Implement highlighting using coloured circles behind the clock text,
+                 where the opacity is animated.
+                 However when the colour is behind the text stops mouse over, so work
+                 around this by having an animated transparent circle in front and use
+                 element binding to tie the colured circle to the transparent circle. -->
+            <Ellipse Width="{x:Static pickerComponents:DateTimePickerConstants.OuterHourHighlightSize}"
+                     Height="{x:Static pickerComponents:DateTimePickerConstants.OuterHourHighlightSize}"
+                     Canvas.Top="{x:Static pickerComponents:DateTimePickerConstants.OuterHourHighlightDelta}"
+                     Canvas.Left="{x:Static pickerComponents:DateTimePickerConstants.OuterHourHighlightDelta}"
+                     Stroke="LightBlue"
+                     StrokeThickness="{x:Static pickerComponents:DateTimePickerConstants.OuterHourHighlightThickness}"
+                     Opacity="{Binding Opacity, ElementName=EllipseHoursAm}" />
+            <Ellipse Width="{x:Static pickerComponents:DateTimePickerConstants.MinuteHighlightSize}"
+                     Height="{x:Static pickerComponents:DateTimePickerConstants.MinuteHighlightSize}"
+                     Canvas.Top="{x:Static pickerComponents:DateTimePickerConstants.MinuteHighlightCumulativeDelta}"
+                     Canvas.Left="{x:Static pickerComponents:DateTimePickerConstants.MinuteHighlightCumulativeDelta}"
+                     Stroke="White"
+                     StrokeThickness="{x:Static pickerComponents:DateTimePickerConstants.MinuteHighlightThickness}"
+                     Opacity="{Binding Opacity, ElementName=EllipseMinutes}" />
+            <Ellipse Width="{x:Static pickerComponents:DateTimePickerConstants.InnerHourHighlightSize}"
+                     Height="{x:Static pickerComponents:DateTimePickerConstants.InnerHourHighlightSize}"
+                     Canvas.Top="{x:Static pickerComponents:DateTimePickerConstants.InnerHourHighlightCumulativeDelta}"
+                     Canvas.Left="{x:Static pickerComponents:DateTimePickerConstants.InnerHourHighlightCumulativeDelta}"
+                     Stroke="pink"
+                     StrokeThickness="{x:Static pickerComponents:DateTimePickerConstants.InnerHourHighlightThickness}"
+                     Opacity="{Binding Opacity, ElementName=EllipseHoursPm}" />
+
+
+            <!-- Outer Hours - Text-->
+            <radialPanel:RadialPanel Width="{x:Static pickerComponents:DateTimePickerConstants.OuterHourSize}"
+                                     Height="{x:Static pickerComponents:DateTimePickerConstants.OuterHourSize}"
+                                     Canvas.Top="{x:Static pickerComponents:DateTimePickerConstants.OuterHourDelta}"
+                                     Canvas.Left="{x:Static pickerComponents:DateTimePickerConstants.OuterHourDelta}"
+                                     Visibility="Visible">
+                <TextBlock Text="12" />
+                <TextBlock Text="01" />
+                <TextBlock Text="02" />
+                <TextBlock Text="03" />
+                <TextBlock Text="04" />
+                <TextBlock Text="05" />
+                <TextBlock Text="06" />
+                <TextBlock Text="07" />
+                <TextBlock Text="08" />
+                <TextBlock Text="09" />
+                <TextBlock Text="10" />
+                <TextBlock Text="11" />
+            </radialPanel:RadialPanel>
+
+            <!-- Minutes -->
+            <radialPanel:RadialPanel Width="{x:Static pickerComponents:DateTimePickerConstants.MinuteSize}"
+                                     Height="{x:Static pickerComponents:DateTimePickerConstants.MinuteSize}"
+                                     Canvas.Top="{x:Static pickerComponents:DateTimePickerConstants.MinuteCumulativeDelta}"
+                                     Canvas.Left="{x:Static pickerComponents:DateTimePickerConstants.MinuteCumulativeDelta}"
+                                     Visibility="Visible">
+                <radialPanel:RadialPanel.Resources>
+                    <Style TargetType="Ellipse">
+                        <Setter Property="Height"
+                                Value="{x:Static pickerComponents:DateTimePickerConstants.MinuteMarkSize}" />
+                        <Setter Property="Width"
+                                Value="{x:Static pickerComponents:DateTimePickerConstants.MinuteMarkSize}" />
+                        <Setter Property="Stroke" Value="Black" />
+                    </Style>
+                </radialPanel:RadialPanel.Resources>
+                <Ellipse /><Ellipse /><Ellipse /><Ellipse /><Ellipse /> <Ellipse /><Ellipse /><Ellipse /><Ellipse />
+                <Ellipse />
+                <Ellipse /><Ellipse /><Ellipse /><Ellipse /><Ellipse /> <Ellipse /><Ellipse /><Ellipse /><Ellipse />
+                <Ellipse />
+                <Ellipse /><Ellipse /><Ellipse /><Ellipse /><Ellipse /> <Ellipse /><Ellipse /><Ellipse /><Ellipse />
+                <Ellipse />
+                <Ellipse /><Ellipse /><Ellipse /><Ellipse /><Ellipse /> <Ellipse /><Ellipse /><Ellipse /><Ellipse />
+                <Ellipse />
+                <Ellipse /><Ellipse /><Ellipse /><Ellipse /><Ellipse /> <Ellipse /><Ellipse /><Ellipse /><Ellipse />
+                <Ellipse />
+                <Ellipse /><Ellipse /><Ellipse /><Ellipse /><Ellipse /> <Ellipse /><Ellipse /><Ellipse /><Ellipse />
+                <Ellipse />
+            </radialPanel:RadialPanel>
+
+            <!-- Inner Hours - Text-->
+            <radialPanel:RadialPanel Width="{x:Static pickerComponents:DateTimePickerConstants.InnerHourSize}"
+                                     Height="{x:Static pickerComponents:DateTimePickerConstants.InnerHourSize}"
+                                     Canvas.Top="{x:Static pickerComponents:DateTimePickerConstants.InnerHourCumulativeDelta}"
+                                     Canvas.Left="{x:Static pickerComponents:DateTimePickerConstants.InnerHourCumulativeDelta}"
+                                     Visibility="Visible">
+                <radialPanel:RadialPanel.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="8" />
+                        <Setter Property="Foreground" Value="Red" />
+                    </Style>
+                </radialPanel:RadialPanel.Resources>
+                <TextBlock Text="00" />
+                <TextBlock Text="13" />
+                <TextBlock Text="14" />
+                <TextBlock Text="15" />
+                <TextBlock Text="16" />
+                <TextBlock Text="17" />
+                <TextBlock Text="18" />
+                <TextBlock Text="19" />
+                <TextBlock Text="20" />
+                <TextBlock Text="21" />
+                <TextBlock Text="22" />
+                <TextBlock Text="23" />
+            </radialPanel:RadialPanel>
+
+            <!-- Transparent circles - animated on mouse over and clickable! -->
+            <Ellipse Width="{x:Static pickerComponents:DateTimePickerConstants.OuterHourHighlightSize}"
+                     Height="{x:Static pickerComponents:DateTimePickerConstants.OuterHourHighlightSize}"
+                     Canvas.Top="{x:Static pickerComponents:DateTimePickerConstants.OuterHourHighlightDelta}"
+                     Canvas.Left="{x:Static pickerComponents:DateTimePickerConstants.OuterHourHighlightDelta}"
+                     Stroke="Transparent"
+                     StrokeThickness="{x:Static pickerComponents:DateTimePickerConstants.OuterHourHighlightThickness}"
+                     Style="{StaticResource ElipseAnimationStyle}"
+                     x:Name="EllipseHoursAm"
+                     MouseDown="EllipseHoursAm_MouseDown" />
+            <Ellipse Width="{x:Static pickerComponents:DateTimePickerConstants.MinuteHighlightSize}"
+                     Height="{x:Static pickerComponents:DateTimePickerConstants.MinuteHighlightSize}"
+                     Canvas.Top="{x:Static pickerComponents:DateTimePickerConstants.MinuteHighlightCumulativeDelta}"
+                     Canvas.Left="{x:Static pickerComponents:DateTimePickerConstants.MinuteHighlightCumulativeDelta}"
+                     Stroke="Transparent"
+                     StrokeThickness="{x:Static pickerComponents:DateTimePickerConstants.MinuteHighlightThickness}"
+                     Style="{StaticResource ElipseAnimationStyle}"
+                     x:Name="EllipseMinutes"
+                     MouseDown="EllipseMinutes_MouseDown" />
+            <Ellipse Width="{x:Static pickerComponents:DateTimePickerConstants.InnerHourHighlightSize}"
+                     Height="{x:Static pickerComponents:DateTimePickerConstants.InnerHourHighlightSize}"
+                     Canvas.Top="{x:Static pickerComponents:DateTimePickerConstants.InnerHourHighlightCumulativeDelta}"
+                     Canvas.Left="{x:Static pickerComponents:DateTimePickerConstants.InnerHourHighlightCumulativeDelta}"
+                     Stroke="Transparent"
+                     StrokeThickness="{x:Static pickerComponents:DateTimePickerConstants.InnerHourHighlightThickness}"
+                     Style="{StaticResource ElipseAnimationStyle}"
+                     x:Name="EllipseHoursPm"
+                     MouseDown="EllipseHoursPm_MouseDown" />
+
+            <!-- Hands -->
+            <!-- NB. Top + CentreX and Left + CentreY should equal 140 (half the height) -->
+
+            <!-- Hour -->
+            <Rectangle Canvas.Top="{x:Static pickerComponents:DateTimePickerConstants.HourHandLengthOffset}"
+                       Canvas.Left="{x:Static pickerComponents:DateTimePickerConstants.HourHandWidthOffset}"
+                       Height="{x:Static pickerComponents:DateTimePickerConstants.HourHandTotalLength}"
+                       Width="{x:Static pickerComponents:DateTimePickerConstants.HourHandWidth}"
+                       Stroke="Silver" Fill="AntiqueWhite">
+                <Rectangle.RenderTransform>
+                    <RotateTransform
+                        CenterY="{x:Static pickerComponents:DateTimePickerConstants.HourHandPositiveLength}"
+                        CenterX="{x:Static pickerComponents:DateTimePickerConstants.HourHandHalfWidth}"
+                        Angle="{Binding AngleForHour}" />
+                </Rectangle.RenderTransform>
+            </Rectangle>
+            <!-- Mark -->
+            <Rectangle Canvas.Top="{x:Static pickerComponents:DateTimePickerConstants.HourHandMarkLengthOffet}"
+                       Canvas.Left="{x:Static pickerComponents:DateTimePickerConstants.HourHandMarkWidthOffset}"
+                       Height="{x:Static pickerComponents:DateTimePickerConstants.HourHandMarkLength}"
+                       Width="{x:Static pickerComponents:DateTimePickerConstants.HourHandMarkWidth}"
+                       Stroke="Red" Fill="Red">
+                <Rectangle.RenderTransform>
+                    <RotateTransform
+                        CenterY="{x:Static pickerComponents:DateTimePickerConstants.HourHandMarkApparentLength}"
+                        CenterX="{x:Static pickerComponents:DateTimePickerConstants.HourHandMarkHalfWidth}"
+                        Angle="{Binding AngleForHour}" />
+                </Rectangle.RenderTransform>
+            </Rectangle>
+            <!-- Grab -->
+            <Rectangle Canvas.Top="{x:Static pickerComponents:DateTimePickerConstants.HourHandMarkLengthOffet}"
+                       Canvas.Left="{x:Static pickerComponents:DateTimePickerConstants.HourHandGrabWidthOffset}"
+                       Height="{x:Static pickerComponents:DateTimePickerConstants.HourHandMarkLength}"
+                       Width="{x:Static pickerComponents:DateTimePickerConstants.HourHandGrabWidth}"
+                       Stroke="Transparent" Fill="Transparent"
+                       MouseDown="HourGrab_MouseDown"
+                       MouseUp="HourGrab_MouseUp"
+                       MouseMove="HourGrab_MouseMove"
+                       Name="HourHandle">
+                <Rectangle.RenderTransform>
+                    <RotateTransform
+                        CenterY="{x:Static pickerComponents:DateTimePickerConstants.HourHandMarkApparentLength}"
+                        CenterX="{x:Static pickerComponents:DateTimePickerConstants.HourHandGrabHalfWidth}"
+                        Angle="{Binding AngleForHour}" />
+                </Rectangle.RenderTransform>
+            </Rectangle>
+
+            <!-- Minute -->
+            <Rectangle Canvas.Top="{x:Static pickerComponents:DateTimePickerConstants.MinuteHandLengthOffset}"
+                       Canvas.Left="{x:Static pickerComponents:DateTimePickerConstants.MinuteHandWidthOffset}"
+                       Height="{x:Static pickerComponents:DateTimePickerConstants.MinuteHandTotalLength}"
+                       Width="{x:Static pickerComponents:DateTimePickerConstants.MinuteHandWidth}"
+                       Stroke="Silver" Fill="AntiqueWhite">
+                <Rectangle.RenderTransform>
+                    <RotateTransform
+                        CenterY="{x:Static pickerComponents:DateTimePickerConstants.MinuteHandPositiveLength}"
+                        CenterX="{x:Static pickerComponents:DateTimePickerConstants.MinuteHandHalfWidth}"
+                        Angle="{Binding AngleForMinute}" />
+                </Rectangle.RenderTransform>
+            </Rectangle>
+            <!-- Mark -->
+            <Rectangle Canvas.Top="{x:Static pickerComponents:DateTimePickerConstants.MinuteHandMarkLengthOffet}"
+                       Canvas.Left="{x:Static pickerComponents:DateTimePickerConstants.MinuteHandMarkWidthOffset}"
+                       Height="{x:Static pickerComponents:DateTimePickerConstants.MinuteHandMarkLength}"
+                       Width="{x:Static pickerComponents:DateTimePickerConstants.MinuteHandMarkWidth}"
+                       Stroke="Red" Fill="Red">
+                <Rectangle.RenderTransform>
+                    <RotateTransform
+                        CenterY="{x:Static pickerComponents:DateTimePickerConstants.MinuteHandMarkApparentLength}"
+                        CenterX="{x:Static pickerComponents:DateTimePickerConstants.MinuteHandMarkHalfWidth}"
+                        Angle="{Binding AngleForMinute}" />
+                </Rectangle.RenderTransform>
+            </Rectangle>
+            <!-- Grab -->
+            <Rectangle Canvas.Top="{x:Static pickerComponents:DateTimePickerConstants.MinuteHandMarkLengthOffet}"
+                       Canvas.Left="{x:Static pickerComponents:DateTimePickerConstants.MinuteHandGrabWidthOffset}"
+                       Height="{x:Static pickerComponents:DateTimePickerConstants.MinuteHandMarkLength}"
+                       Width="{x:Static pickerComponents:DateTimePickerConstants.MinuteHandGrabWidth}"
+                       Stroke="Transparent" Fill="Transparent"
+                       MouseDown="MinuteGrab_MouseDown"
+                       MouseUp="MinuteGrab_MouseUp"
+                       MouseMove="MinuteGrab_MouseMove"
+                       Name="MinuteHandle">
+                <Rectangle.RenderTransform>
+                    <RotateTransform
+                        CenterY="{x:Static pickerComponents:DateTimePickerConstants.MinuteHandMarkApparentLength}"
+                        CenterX="{x:Static pickerComponents:DateTimePickerConstants.MinuteHandGrabHalfWidth}"
+                        Angle="{Binding AngleForMinute}" />
+                </Rectangle.RenderTransform>
+            </Rectangle>
+
+            <!-- Centre -->
+            <Ellipse Canvas.Top="136" Canvas.Left="136"
+                     Height="8" Width="8"
+                     Stroke="Silver" Fill="AntiqueWhite" />
+        </Canvas>
+
+    </Grid>
+</UserControl>
